@@ -6,6 +6,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.daysmatter.app.MyApplication;
+import com.example.daysmatter.fragment.MyFragmentPagerAdapter;
 import com.example.daysmatter.model.BookBean;
 import com.example.daysmatter.model.EventBean;
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RadioGroup mRadioGroup;
     private RadioButton tab1,tab2,tab3,tab4;  //Tab按钮
     private List<View> mViews;   //存放视图
+    private MyFragmentPagerAdapter mAdapter;
 
     /** phone列表 */
     private List<BookBean> mBookList;
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
 
 //        txtBook = findViewById(R.id.txt_book);
 //        txtEvent = findViewById(R.id.txt_event);
@@ -55,8 +58,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        deleteBook.setOnClickListener(this::onClick);
 //        deleteEvent.setOnClickListener(this::onClick);
         initView();
-        setLinstener();
     }
+
+    //代表页面的常量
+    public static final int PAGE_ONE = 0;
+    public static final int PAGE_TWO = 1;
+    public static final int PAGE_THREE = 2;
+    public static final int PAGE_FOUR = 3;
 
     // 初始化
     private void initView() {
@@ -66,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tab2 = findViewById(R.id.rb_books);
         tab3 = findViewById(R.id.rb_history);
         tab4 = findViewById(R.id.rb_my);
+        tab1.setOnClickListener(this::onClick);
+        tab2.setOnClickListener(this::onClick);
+        tab3.setOnClickListener(this::onClick);
+        tab4.setOnClickListener(this::onClick);
 
         mViews = new ArrayList<>(); // 加载，添加视图
         mViews.add(LayoutInflater.from(this).inflate(R.layout.home, null, false));
@@ -73,8 +85,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mViews.add(LayoutInflater.from(this).inflate(R.layout.history, null, false));
         mViews.add(LayoutInflater.from(this).inflate(R.layout.my, null, false));
 
-        mViewpager.setAdapter(new MyViewPagerAdapter()); // 设置适配器
-        mViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewpager.setAdapter(mAdapter); // 设置适配器
+        mViewpager.setCurrentItem(0);
+        mViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -117,68 +130,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    /**
-     * Tab按钮监听事件配置
-     */
-    private void setLinstener() {
-        tab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mViewpager.setCurrentItem(0);
-            }
-        });
-        tab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mViewpager.setCurrentItem(1);
-            }
-        });
-        tab3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mViewpager.setCurrentItem(2);
-            }
-        });
-        tab4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mViewpager.setCurrentItem(3);
-            }
-        });
-    }
-
-    /**
-     * ViewPager适配器
-     */
-    private class MyViewPagerAdapter extends PagerAdapter {
-        @Override
-        public int getCount() {
-            return mViews.size();
-        }
-
-
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view==object;
-        }
-
-        @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            container.removeView(mViews.get(position));
-        }
-
-        @NonNull
-        @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            container.addView(mViews.get(position));
-            return mViews.get(position);
-        }
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.rb_home:
+                mViewpager.setCurrentItem(PAGE_ONE);
+                break;
+            case R.id.rb_books:
+                mViewpager.setCurrentItem(PAGE_TWO);
+                break;
+            case R.id.rb_history:
+                mViewpager.setCurrentItem(PAGE_THREE);
+                break;
+            case R.id.rb_my:
+                mViewpager.setCurrentItem(PAGE_FOUR);
+                break;
 //            case R.id.btn_add_book:
 //                InsertBook(v);
 //                break;

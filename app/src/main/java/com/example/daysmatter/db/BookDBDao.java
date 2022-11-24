@@ -24,7 +24,7 @@ public class BookDBDao {
     public static String KEY_ID = "id";
     public static String KEY_NAME = "name";
     public static String KEY_ICON = "icon";
-    public static String KEY_COVER = "price";
+    public static String KEY_COVER = "cover";
 
     private SQLiteDatabase mDatabase;
     /** 上下文 */
